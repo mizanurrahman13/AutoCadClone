@@ -1,0 +1,48 @@
+﻿<!--<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AutoCADClone.UI.MainPage"
+             BackgroundColor="White">
+    <GraphicsView x:Name="DrawingCanvas" Drawable="{Binding Drawable}" />
+</ContentPage>-->
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AutoCADClone.UI.MainPage"
+             BackgroundColor="White">
+
+    <!-- Toolbar for shape selection -->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Draw Line"
+                     IconImageSource="line_icon.png"
+                     Clicked="OnDrawLineClicked" />
+        <ToolbarItem Text="Draw Circle"
+                     IconImageSource="circle_icon.png"
+                     Clicked="OnDrawCircleClicked" />
+        <ToolbarItem Text="Draw Rectangle"
+                     IconImageSource="rectangle_icon.png"
+                     Clicked="OnDrawRectangleClicked" />
+        <ToolbarItem Text="Draw Hexagon"
+                     IconImageSource="hexagon_icon.png"
+                     Clicked="OnDrawHexagonClicked" />
+        <ToolbarItem Text="Draw Polygon"
+                     IconImageSource="polygon_icon.png"
+                     Clicked="OnDrawPolygonClicked" />
+        <ToolbarItem Text="Join Points"
+             IconImageSource="join_icon.png"
+             Clicked="OnJoinLinesClicked" />
+
+    </ContentPage.ToolbarItems>
+
+    <!-- Scrollable canvas area -->
+    <ScrollView Orientation="Both">
+        <Grid>
+            <GraphicsView x:Name="DrawingCanvas"
+                          HorizontalOptions="Start"
+                          VerticalOptions="Start"
+                          WidthRequest="1000"
+                          HeightRequest="1000" />
+        </Grid>
+    </ScrollView>
+</ContentPage>
+
+

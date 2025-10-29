@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/AutoCADClone.Application/">
+    <Project Path="src/AutoCADClone.Application/AutoCADClone.Application/AutoCADClone.Application.csproj" Id="c6d2f45e-f158-45b2-8051-5f7e9f54e69b" />
+  </Folder>
+  <Folder Name="/src/AutoCADClone.Domain/">
+    <Project Path="src/AutoCADClone.Domain/AutoCADClone.Domain/AutoCADClone.Domain.csproj" Id="68ac2483-4b86-468f-a7a1-3b3e2e1d2ed9" />
+  </Folder>
+  <Folder Name="/src/AutoCADClone.Infrastructure/">
+    <Project Path="src/AutoCADClone.Infrastructure/AutoCADClone.Infrastructure/AutoCADClone.Infrastructure.csproj" Id="6b0072e9-d5fa-4b97-9cdb-6147ed705104" />
+  </Folder>
+  <Folder Name="/src/AutoCADClone.UI/">
+    <Project Path="src/AutoCADClone.UI/AutoCADClone.UI/AutoCADClone.UI.csproj" Id="6fc96cba-a478-4098-b2bb-2e5349b266ba">
+      <Deploy Solution="Debug|*" />
+    </Project>
+  </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/AutoCADClone.Tests/" />
+</Solution>
