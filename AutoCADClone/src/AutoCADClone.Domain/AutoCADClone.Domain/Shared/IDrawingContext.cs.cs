@@ -1,4 +1,6 @@
-﻿namespace AutoCADClone.Domain.Shared;
+﻿using System.Drawing;
+
+namespace AutoCADClone.Domain.Shared;
 
 public interface IDrawingContext
 {
@@ -8,5 +10,4 @@ public interface IDrawingContext
     void DrawHexagon(double centerX, double centerY, double radius);
     void DrawPolygon(IEnumerable<(double x, double y)> points);
     void DrawPolyline(IEnumerable<(double x, double y)> points);
-
 }

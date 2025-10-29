@@ -9,79 +9,6 @@ namespace AutoCADClone.UI;
 
 public partial class MainPage : ContentPage
 {
-    //private readonly IMediator _mediator;
-    //private readonly CanvasService _canvasService;
-    //private bool _isDrawingLine = false;
-    //private DrawingMode _currentMode = DrawingMode.None;
-    //private Point? _startPoint = null;
-
-    //private void OnDrawLineClicked(object sender, EventArgs e)
-    //{
-    //    _currentMode = DrawingMode.Line;
-    //    _startPoint = null;
-    //}
-
-    //private void OnDrawCircleClicked(object sender, EventArgs e)
-    //{
-    //    _currentMode = DrawingMode.Circle;
-    //    _startPoint = null;
-    //}
-
-    //public MainPage(IMediator mediator, CanvasService canvasService)
-    //{
-    //    InitializeComponent();
-    //    _mediator = mediator;
-    //    _canvasService = canvasService;
-
-    //    DrawingCanvas.StartInteraction += async (s, e) =>
-    //    {
-    //        var touch = e.Touches.FirstOrDefault();
-    //        if (touch == null) return;
-
-    //        var currentPoint = new Point(touch.X, touch.Y);
-
-    //        switch (_currentMode)
-    //        {
-    //            case DrawingMode.Line:
-    //                if (_startPoint == null)
-    //                {
-    //                    _startPoint = currentPoint;
-    //                }
-    //                else
-    //                {
-    //                    var line = await _mediator.Send(new DrawLineCommand(_startPoint.Value, currentPoint));
-    //                    _canvasService.AddLine(line);
-    //                    _startPoint = null;
-    //                    DrawingCanvas.Invalidate();
-    //                }
-    //                break;
-
-    //            case DrawingMode.Circle:
-    //                if (_startPoint == null)
-    //                {
-    //                    _startPoint = currentPoint;
-    //                }
-    //                else
-    //                {
-    //                    var dx = currentPoint.X - _startPoint.Value.X;
-    //                    var dy = currentPoint.Y - _startPoint.Value.Y;
-    //                    var radius = Math.Sqrt(dx * dx + dy * dy);
-
-    //                    var circle = await _mediator.Send(new DrawCircleCommand(_startPoint.Value, radius));
-    //                    _canvasService.AddCircle(circle);
-    //                    _startPoint = null;
-    //                    DrawingCanvas.Invalidate();
-    //                }
-    //                break;
-
-    //            default:
-    //                break;
-    //        }
-    //    };
-
-    //    DrawingCanvas.Drawable = new LineDrawable(_canvasService);
-    //}
-
     private DrawingMode _currentMode = DrawingMode.None;
     private DomainPoint? _startPoint = null; // ✅ clear and correct
 
@@ -91,7 +18,7 @@ public partial class MainPage : ContentPage
     private readonly List<DomainPoint> _polygonPoints = new();
     private readonly List<DomainPoint> _joinPoints = new();
     private readonly List<DomainPoint> _joinedLinePoints = new();
-
+    private DrawingMode _selectedMode = DrawingMode.None;
 
     public MainPage(IMediator mediator, CanvasService canvasService)
     {
@@ -101,42 +28,80 @@ public partial class MainPage : ContentPage
 
         DrawingCanvas.Drawable = new CanvasDrawable(_canvasService);
         DrawingCanvas.StartInteraction += OnCanvasStartInteraction;
+    }    
+
+    private void UpdateMenuHighlight()
+    {
+        LineHighlightBox.BackgroundColor = _selectedMode == DrawingMode.Line ? Colors.LightBlue : Colors.Transparent;
+        CircleHighlightBox.BackgroundColor = _selectedMode == DrawingMode.Circle ? Colors.LightBlue : Colors.Transparent;
+        RectangleHighlightBox.BackgroundColor = _selectedMode == DrawingMode.Rectangle ? Colors.LightBlue : Colors.Transparent;
+        HexagonHighlightBox.BackgroundColor = _selectedMode == DrawingMode.Hexagon ? Colors.LightBlue : Colors.Transparent;
+        PolygonHighlightBox.BackgroundColor = _selectedMode == DrawingMode.Polygon ? Colors.LightBlue : Colors.Transparent;
+        JoinHighlightBox.BackgroundColor = _selectedMode == DrawingMode.JoinLines ? Colors.LightBlue : Colors.Transparent;
     }
 
     private void OnDrawLineClicked(object sender, EventArgs e)
     {
+        _selectedMode = DrawingMode.Line;
         _currentMode = DrawingMode.Line;
-        _startPoint = null;
+        UpdateMenuHighlight();
     }
 
     private void OnDrawCircleClicked(object sender, EventArgs e)
     {
+        _selectedMode = DrawingMode.Circle;
         _currentMode = DrawingMode.Circle;
         _startPoint = null;
+        UpdateMenuHighlight();
     }
 
     private void OnDrawRectangleClicked(object sender, EventArgs e)
     {
+        _selectedMode = DrawingMode.Rectangle;
         _currentMode = DrawingMode.Rectangle;
         _startPoint = null;
+        UpdateMenuHighlight();
     }
 
     private void OnDrawHexagonClicked(object sender, EventArgs e)
     {
+        _selectedMode = DrawingMode.Hexagon;
         _currentMode = DrawingMode.Hexagon;
         _startPoint = null;
+        UpdateMenuHighlight();
     }
 
     private void OnDrawPolygonClicked(object sender, EventArgs e)
     {
+        _selectedMode = DrawingMode.Polygon;
         _currentMode = DrawingMode.Polygon;
         _polygonPoints.Clear();
+        UpdateMenuHighlight();
     }
 
     private void OnJoinLinesClicked(object sender, EventArgs e)
     {
+        _selectedMode = DrawingMode.JoinLines;
         _currentMode = DrawingMode.JoinLines;
         _joinedLinePoints.Clear();
+        UpdateMenuHighlight();
+    }
+
+    private async void OnFinishJoinLinesClicked(object sender, EventArgs e)
+    {
+        if (_joinedLinePoints.Count >= 2)
+        {
+            var polyline = new Polyline(_joinedLinePoints.ToList());
+            var result = await _mediator.Send(new DrawAnyShapeCommand(polyline));
+            _canvasService.AddShape(result);
+
+            var bounds = GetShapePoints(polyline);
+            AdjustCanvasSize(bounds);
+
+            DrawingCanvas.Invalidate();
+            _joinedLinePoints.Clear();
+            UpdateMenuHighlight();
+        }
     }
 
     private DomainPoint ToDomainPoint(MauiPoint p) => new DomainPoint(p.X, p.Y);
@@ -147,6 +112,21 @@ public partial class MainPage : ContentPage
         if (touch != null)
         {
             var domainPoint = ToDomainPoint(new MauiPoint(touch.X, touch.Y));
+
+            // Show and move the custom cursor
+            CustomCursor.IsVisible = true;
+            AbsoluteLayout.SetLayoutBounds(CustomCursor, new Rect(touch.X - 12, touch.Y - 12, 24, 24));
+
+            // Optional: hide cursor after 1 second
+            await Task.Delay(1000);
+            CustomCursor.IsVisible = false;
+
+            if (_currentMode == DrawingMode.JoinLines)
+            {
+                _joinedLinePoints.Add(domainPoint);
+                return; // Don't draw yet — wait for Finish Join
+            }
+
             if (_currentMode == DrawingMode.JoinLines)
             {
                 _joinedLinePoints.Add(domainPoint);
@@ -186,7 +166,6 @@ public partial class MainPage : ContentPage
 
         }
     }
-
 
     private async Task HandleShapeDrawing(DomainPoint currentPoint)
     {
@@ -249,10 +228,11 @@ public partial class MainPage : ContentPage
         {
             Line line => new[] { line.Start, line.End },
             Rectangle rect => new[] { rect.TopLeft, rect.BottomRight },
-            Circle circle => new[] {
-            new DomainPoint(circle.Center.X + circle.Radius, circle.Center.Y + circle.Radius),
-            new DomainPoint(circle.Center.X - circle.Radius, circle.Center.Y - circle.Radius)
-        },
+            Circle circle => new[]
+            {
+                new DomainPoint(circle.Center.X + circle.Radius, circle.Center.Y + circle.Radius),
+                new DomainPoint(circle.Center.X - circle.Radius, circle.Center.Y - circle.Radius)
+            },
             Hexagon hex => Enumerable.Range(0, 6).Select(i =>
             {
                 double angle = Math.PI / 3 * i;
@@ -261,6 +241,7 @@ public partial class MainPage : ContentPage
                     hex.Center.Y + hex.Radius * Math.Sin(angle));
             }),
             Polygon poly => poly.Vertices,
+            Polyline polyline => polyline.Points,
             _ => Enumerable.Empty<DomainPoint>()
         };
     }

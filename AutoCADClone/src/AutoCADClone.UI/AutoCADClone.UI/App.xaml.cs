@@ -1,4 +1,4 @@
-﻿namespace AutoCADClone.UI
+﻿                           namespace AutoCADClone.UI
 {
     public partial class App : IApplication
     {

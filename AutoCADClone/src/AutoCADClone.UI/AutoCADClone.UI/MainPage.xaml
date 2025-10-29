@@ -5,44 +5,274 @@
     <GraphicsView x:Name="DrawingCanvas" Drawable="{Binding Drawable}" />
 </ContentPage>-->
 
+<!--<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AutoCADClone.UI.MainPage"
+             BackgroundColor="White">
+
+    <Grid ColumnDefinitions="Auto,*" RowDefinitions="*">
+        --><!-- Left-aligned vertical navigation --><!--
+        <VerticalStackLayout Grid.Column="0"
+                             BackgroundColor="LightGray"
+                             Padding="10"
+                             Spacing="20"
+                             VerticalOptions="FillAndExpand"
+                             WidthRequest="150">
+
+            --><!-- Line --><!--
+            <HorizontalStackLayout>
+                <Image Source="line_icon.png"
+                       WidthRequest="24"
+                       HeightRequest="24" />
+                <Label Text="Draw Line"
+                       FontAttributes="Bold"
+                       TextColor="DarkBlue"
+                       VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnDrawLineClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+            --><!-- Circle --><!--
+            <HorizontalStackLayout>
+                <Image Source="circle_icon.png"
+                       WidthRequest="24"
+                       HeightRequest="24" />
+                <Label Text="Draw Circle"
+                       FontAttributes="Bold"
+                       TextColor="DarkBlue"
+                       VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnDrawCircleClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+            --><!-- Rectangle --><!--
+            <HorizontalStackLayout>
+                <Image Source="rectangle_icon.png"
+                       WidthRequest="24"
+                       HeightRequest="24" />
+                <Label Text="Draw Rectangle"
+                       FontAttributes="Bold"
+                       TextColor="DarkBlue"
+                       VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnDrawRectangleClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+            --><!-- Hexagon --><!--
+            <HorizontalStackLayout>
+                <Image Source="hexagon_icon.png"
+                       WidthRequest="24"
+                       HeightRequest="24" />
+                <Label Text="Draw Hexagon"
+                       FontAttributes="Bold"
+                       TextColor="DarkBlue"
+                       VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnDrawHexagonClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+            --><!-- Polygon --><!--
+            <HorizontalStackLayout>
+                <Image Source="polygon_icon.png"
+                       WidthRequest="24"
+                       HeightRequest="24" />
+                <Label Text="Draw Polygon"
+                       FontAttributes="Bold"
+                       TextColor="DarkBlue"
+                       VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnDrawPolygonClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+            --><!-- Join Points --><!--
+            <HorizontalStackLayout>
+                <Image Source="join_icon.png"
+                       WidthRequest="24"
+                       HeightRequest="24" />
+                <Label Text="Join Points"
+                       FontAttributes="Bold"
+                       TextColor="DarkBlue"
+                       VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnJoinLinesClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+            --><!-- Finish Join --><!--
+            <Button Text="Finish Join"
+                    Clicked="OnFinishJoinLinesClicked"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    BackgroundColor="DarkBlue" />
+        </VerticalStackLayout>
+
+        --><!-- Scrollable canvas area --><!--
+        <ScrollView Grid.Column="1" Orientation="Both">
+            <Grid>
+                <GraphicsView x:Name="DrawingCanvas"
+                              HorizontalOptions="Start"
+                              VerticalOptions="Start"
+                              WidthRequest="1000"
+                              HeightRequest="1000" />
+            </Grid>
+        </ScrollView>
+    </Grid>
+</ContentPage>-->
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AutoCADClone.UI.MainPage"
              BackgroundColor="White">
 
-    <!-- Toolbar for shape selection -->
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Draw Line"
-                     IconImageSource="line_icon.png"
-                     Clicked="OnDrawLineClicked" />
-        <ToolbarItem Text="Draw Circle"
-                     IconImageSource="circle_icon.png"
-                     Clicked="OnDrawCircleClicked" />
-        <ToolbarItem Text="Draw Rectangle"
-                     IconImageSource="rectangle_icon.png"
-                     Clicked="OnDrawRectangleClicked" />
-        <ToolbarItem Text="Draw Hexagon"
-                     IconImageSource="hexagon_icon.png"
-                     Clicked="OnDrawHexagonClicked" />
-        <ToolbarItem Text="Draw Polygon"
-                     IconImageSource="polygon_icon.png"
-                     Clicked="OnDrawPolygonClicked" />
-        <ToolbarItem Text="Join Points"
-             IconImageSource="join_icon.png"
-             Clicked="OnJoinLinesClicked" />
+    <Grid ColumnDefinitions="Auto,*" RowDefinitions="*">
+        <!-- Navigation Sidebar -->
+        <VerticalStackLayout Grid.Column="0"
+                             BackgroundColor="LightGray"
+                             Padding="10"
+                             Spacing="10"
+                             VerticalOptions="FillAndExpand"
+                             WidthRequest="180">
 
-    </ContentPage.ToolbarItems>
+            <!-- Line -->
+            <Frame x:Name="LineHighlightBox" Padding="5" HasShadow="False" CornerRadius="6">
+                <HorizontalStackLayout>
+                    <Image Source="https://cdn-icons-png.flaticon.com/512/3128/3128218.png"
+                           WidthRequest="24" HeightRequest="24" />
+                    <Label Text="Draw Line"
+                           FontAttributes="Bold"
+                           TextColor="DarkBlue"
+                           VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDrawLineClicked" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Frame>
 
-    <!-- Scrollable canvas area -->
-    <ScrollView Orientation="Both">
-        <Grid>
-            <GraphicsView x:Name="DrawingCanvas"
-                          HorizontalOptions="Start"
-                          VerticalOptions="Start"
-                          WidthRequest="1000"
-                          HeightRequest="1000" />
-        </Grid>
-    </ScrollView>
+            <!-- Circle -->
+            <Frame x:Name="CircleHighlightBox" Padding="5" HasShadow="False" CornerRadius="6">
+                <HorizontalStackLayout>
+                    <Image Source="https://cdn-icons-png.flaticon.com/512/3192/319248.png"
+                           WidthRequest="24" HeightRequest="24" />
+                    <Label Text="Draw Circle"
+                           FontAttributes="Bold"
+                           TextColor="DarkBlue"
+                           VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDrawCircleClicked" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Rectangle -->
+            <Frame x:Name="RectangleHighlightBox" Padding="5" HasShadow="False" CornerRadius="6">
+                <HorizontalStackLayout>
+                    <Image Source="https://cdn-icons-png.flaticon.com/512/1014/1014902.png"
+                           WidthRequest="24" HeightRequest="24" />
+                    <Label Text="Draw Rectangle"
+                           FontAttributes="Bold"
+                           TextColor="DarkBlue"
+                           VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDrawRectangleClicked" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Hexagon -->
+            <Frame x:Name="HexagonHighlightBox" Padding="5" HasShadow="False" CornerRadius="6">
+                <HorizontalStackLayout>
+                    <Image Source="https://cdn-icons-png.flaticon.com/512/631/631570.png"
+                           WidthRequest="24" HeightRequest="24" />
+                    <Label Text="Draw Hexagon"
+                           FontAttributes="Bold"
+                           TextColor="DarkBlue"
+                           VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDrawHexagonClicked" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Polygon -->
+            <Frame x:Name="PolygonHighlightBox" Padding="5" HasShadow="False" CornerRadius="6">
+                <HorizontalStackLayout>
+                    <Image Source="https://cdn-icons-png.flaticon.com/512/7168/7168063.png"
+                           WidthRequest="24" HeightRequest="24" />
+                    <Label Text="Draw Polygon"
+                           FontAttributes="Bold"
+                           TextColor="DarkBlue"
+                           VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDrawPolygonClicked" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Join Points -->
+            <Frame x:Name="JoinHighlightBox" Padding="5" HasShadow="False" CornerRadius="6">
+                <HorizontalStackLayout>
+                    <Image Source="https://cdn-icons-png.flaticon.com/512/5836/5836188.png"
+                           WidthRequest="24" HeightRequest="24" />
+                    <Label Text="Join Points"
+                           FontAttributes="Bold"
+                           TextColor="DarkBlue"
+                           VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnJoinLinesClicked" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Finish Join -->
+            <Button Text="Finish Join"
+                    Clicked="OnFinishJoinLinesClicked"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    BackgroundColor="DarkBlue" />
+        </VerticalStackLayout>
+
+        <!-- Drawing Canvas -->
+        <!-- Scrollable canvas area with custom cursor -->
+        <ScrollView Grid.Column="1" Orientation="Both">
+            <AbsoluteLayout>
+                <GraphicsView x:Name="DrawingCanvas"
+                      HorizontalOptions="Start"
+                      VerticalOptions="Start"
+                      WidthRequest="1000"
+                      HeightRequest="1000" />
+
+                <Image x:Name="CustomCursor"
+                   Source="https://cdn-icons-png.flaticon.com/512/32/32339.png"
+                   WidthRequest="24"
+                   HeightRequest="24"
+                   IsVisible="False"
+                   AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize"
+                   AbsoluteLayout.LayoutFlags="None" />
+
+            </AbsoluteLayout>
+        </ScrollView>
+
+    </Grid>
 </ContentPage>
+
+
+
 
 
